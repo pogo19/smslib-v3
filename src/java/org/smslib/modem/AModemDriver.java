@@ -783,9 +783,9 @@ public abstract class AModemDriver
 						event.event = AsyncEvents.NOTHING;
 						synchronized (getSYNCCommander())
 						{
-							getGateway().getATHandler().switchToCmdMode();
-							getGateway().getModemDriver().write("ATH\r");
-							getGateway().getModemDriver().getResponse();
+//							getGateway().getATHandler().switchToCmdMode();
+//							getGateway().getModemDriver().write("ATH\r");
+//							getGateway().getModemDriver().getResponse();
 							response = event.response;
 						}
 						Service.getInstance().getNotifyQueueManager().getNotifyQueue().add(new CallNotification(getGateway(), getOriginator(response)));
@@ -817,14 +817,14 @@ public abstract class AModemDriver
 				{
 					getGateway().setStatus(GatewayStatuses.RESTART);
 				}
-				catch (IOException e)
-				{
-					getGateway().setStatus(GatewayStatuses.RESTART);
-				}
-				catch (TimeoutException e)
-				{
-					getGateway().setStatus(GatewayStatuses.RESTART);
-				}
+//				catch (IOException e)
+//				{
+//					getGateway().setStatus(GatewayStatuses.RESTART);
+//				}
+//				catch (TimeoutException e)
+//				{
+//					getGateway().setStatus(GatewayStatuses.RESTART);
+//				}
 			}
 			Logger.getInstance().logDebug("AsyncNotifier thread ended.", null, getGateway().getGatewayId());
 		}

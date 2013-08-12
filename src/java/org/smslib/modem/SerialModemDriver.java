@@ -99,7 +99,8 @@ class SerialModemDriver extends AModemDriver implements SerialPortEventListener
 		}
 		catch (Exception e)
 		{
-			throw new GatewayException("Comm library exception: " + e.getMessage());
+			Logger.getInstance().logError("Comm library exception", e, getGateway().getGatewayId());
+			throw new GatewayException("Comm library exception" + e.getMessage());
 		}
 	}
 

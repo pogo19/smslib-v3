@@ -544,8 +544,10 @@ public class ModemGateway extends AGateway
 					line = line.trim();
 					if (line.length() <= 0 || line.equalsIgnoreCase("OK")) break;
 					if (line.length() <= 0 || line.equalsIgnoreCase("ERROR")) break;
+					if (line.length() <= 0 || line.equalsIgnoreCase("RING")) break;
 					i = line.indexOf(':');
 					j = line.indexOf(',');
+					if (j == -1) j = line.length();
 					memIndex = 0;
 					try
 					{

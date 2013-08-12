@@ -73,7 +73,14 @@ public class CommPortIdentifier
 			}
 			catch (ClassNotFoundException e2)
 			{
-				throw new RuntimeException("CommPortIdentifier class not found");
+				try
+				{
+					classCommPortIdentifier = Class.forName("purejavacomm.CommPortIdentifier");
+				}
+				catch (ClassNotFoundException e3)
+				{
+					throw new RuntimeException("CommPortIdentifier class not found");
+				}
 			}
 		}
 		try

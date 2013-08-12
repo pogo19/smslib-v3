@@ -98,7 +98,14 @@ public class SerialPort
 			}
 			catch (ClassNotFoundException e2)
 			{
-				throw new RuntimeException("SerialPort class not found");
+				try
+				{
+					classSerialPort = Class.forName("purejavacomm.SerialPort");
+				}
+				catch (ClassNotFoundException e3)
+				{
+					throw new RuntimeException("SerialPort class not found");
+				}
 			}
 		}
 		try
