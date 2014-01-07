@@ -422,13 +422,26 @@ public class ModemGateway extends AGateway
 						originator = tokens.nextToken().replaceAll("\"", "");
 						tokens.nextToken();
 						dateStr = tokens.nextToken().replaceAll("\"", "");
-						cal1.set(Calendar.YEAR, 2000 + Integer.parseInt(dateStr.substring(0, 2)));
-						cal1.set(Calendar.MONTH, Integer.parseInt(dateStr.substring(3, 5)) - 1);
-						cal1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr.substring(6, 8)));
-						dateStr = tokens.nextToken().replaceAll("\"", "");
-						cal1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(dateStr.substring(0, 2)));
-						cal1.set(Calendar.MINUTE, Integer.parseInt(dateStr.substring(3, 5)));
-						cal1.set(Calendar.SECOND, Integer.parseInt(dateStr.substring(6, 8)));
+						if (dateStr.indexOf('/') == 4) {
+							// e.g. 2014/01/07 14:56:59+04
+							cal1.set(Calendar.YEAR, Integer.parseInt(dateStr.substring(0, 4)));
+							cal1.set(Calendar.MONTH, Integer.parseInt(dateStr.substring(5, 7)) - 1);
+							cal1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr.substring(8, 10)));
+							cal1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(dateStr.substring(11, 13)));
+							cal1.set(Calendar.MINUTE, Integer.parseInt(dateStr.substring(14, 16)));
+							cal1.set(Calendar.SECOND, Integer.parseInt(dateStr.substring(17, 19)));
+							cal1.set(Calendar.ZONE_OFFSET, 1000 * 60 * 15 * Integer.parseInt(dateStr.substring(19, 22)));
+						} else {
+							// e.g. 07/04/20,10:08:02+32
+							cal1.set(Calendar.YEAR, 2000 + Integer.parseInt(dateStr.substring(0, 2)));
+							cal1.set(Calendar.MONTH, Integer.parseInt(dateStr.substring(3, 5)) - 1);
+							cal1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateStr.substring(6, 8)));
+							dateStr = tokens.nextToken().replaceAll("\"", "");
+							cal1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(dateStr.substring(0, 2)));
+							cal1.set(Calendar.MINUTE, Integer.parseInt(dateStr.substring(3, 5)));
+							cal1.set(Calendar.SECOND, Integer.parseInt(dateStr.substring(6, 8)));
+							cal1.set(Calendar.ZONE_OFFSET, 1000 * 60 * 15 * Integer.parseInt(dateStr.substring(8, 11)));
+						}
 						msgText = "";
 						while (true)
 						{
@@ -545,7 +558,10 @@ public class ModemGateway extends AGateway
 					if (line.length() <= 0 || line.equalsIgnoreCase("OK")) break;
 					if (line.length() <= 0 || line.equalsIgnoreCase("ERROR")) break;
 					if (line.length() <= 0 || line.equalsIgnoreCase("RING")) break;
+					if (line.length() <= 0 || line.equalsIgnoreCase("NO CARRIER")) break;
 					i = line.indexOf(':');
+					if (i < 0 || !"+CMGL".equals(line.substring(0, i)))
+						break;
 					j = line.indexOf(',');
 					if (j == -1) j = line.length();
 					memIndex = 0;
