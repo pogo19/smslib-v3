@@ -3,7 +3,7 @@
 	
 	<property name="base" value="."/>
 
-	<property name="smslib.version" value="3.5.3-pg"/>
+	<property name="smslib.version" value="3.5.3-pg2"/>
 	<property name="smslib.source.dir" value="src/java/"/>
 	<property name="smslib.jar.filename" value="smslib-${smslib.version}.jar"/>
 	<property name="smslib.manifest" value="build/SMSLib.mf"/>
