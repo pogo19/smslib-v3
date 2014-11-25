@@ -376,7 +376,7 @@ public class DefaultQueueManager extends AbstractQueueManager
 		public int compare(OutboundMessage x, OutboundMessage y)
 		{
 			int comp = y.getPriority() - x.getPriority();
-			if (comp == 0) comp = y.getRetryCount() - x.getRetryCount();
+			if (comp == 0) comp = x.getRetryCount() - y.getRetryCount();
 			if (comp == 0) comp = x.getDate().compareTo(y.getDate());
 			return comp;
 		}
