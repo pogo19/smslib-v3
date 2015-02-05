@@ -502,18 +502,7 @@ public abstract class AGateway
 						{
 							if (!sendMessage(msg))
 							{
-								if (msg.getRetryCount() < Service.getInstance().getSettings().QUEUE_RETRIES)
-								{
-									Logger.getInstance().logInfo("Reinserting message to queue.", null, getGatewayId());
-									msg.incrementRetryCount();
-									Service.getInstance().getQueueManager().queueMessage(msg);
-								}
-								else
-								{
-									Logger.getInstance().logWarn("Maximum number of queue retries exceeded, message lost.", null, getGatewayId());
-									msg.setFailureCause(FailureCauses.UNKNOWN);
-									Service.getInstance().getNotifyQueueManager().getNotifyQueue().add(new OutboundMessageNotification(getMyself(), msg));
-								}
+								sendError(msg);
 							}
 							else
 							{
@@ -522,7 +511,7 @@ public abstract class AGateway
 						}
 						catch (TimeoutException e)
 						{
-							Service.getInstance().getQueueManager().queueMessage(msg);
+							sendError(msg);
 							throw e;
 						}
 					}
@@ -537,6 +526,23 @@ public abstract class AGateway
 			{
 				Logger.getInstance().logWarn("Queue exception, marking gateway for reset.", e, getGatewayId());
 				setStatus(GatewayStatuses.RESTART);
+				Service.getInstance().getNotifyQueueManager().getNotifyQueue().add(new OutboundMessageNotification(getMyself(), msg));
+			}
+		}
+
+		private void sendError(OutboundMessage msg)
+		{
+			if (msg == null) return;
+			if (msg.getRetryCount() < Service.getInstance().getSettings().QUEUE_RETRIES)
+			{
+				Logger.getInstance().logInfo("Reinserting message to queue.", null, getGatewayId());
+				msg.incrementRetryCount();
+				Service.getInstance().getQueueManager().queueMessage(msg);
+			}
+			else
+			{
+				Logger.getInstance().logWarn("Maximum number of queue retries exceeded, message lost.", null, getGatewayId());
+				msg.setFailureCause(FailureCauses.UNKNOWN);
 				Service.getInstance().getNotifyQueueManager().getNotifyQueue().add(new OutboundMessageNotification(getMyself(), msg));
 			}
 		}
