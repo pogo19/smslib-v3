@@ -211,7 +211,11 @@
         </artifact:deploy>
     </target>
     <target name="deploy-smslib-snapshots" depends="smslib.preparepom,build-smslib,sources-smslib,javadoc-smslib" description="Deploy smslib JAR, javadoc, and sources to Maven snapshots repository.">
+        <artifact:install-provider artifactId="wagon-webdav-jackrabbit" version="2.8"/>
         <artifact:deploy file="${jar.dir}/${smslib.jar.filename}">
+            <remoteRepository url="dav:https://webdav.cloudme.com/repository/CloudDrive/maven/">
+	      <authentication username="repository" password="${repository.password}" />
+	    </remoteRepository>
             <pom file="build/generated/pom.xml" />
             <attach classifier="javadoc" file="${jar.dir}/smslib-${smslib.version}-javadoc.jar" />
             <attach classifier="sources" file="${jar.dir}/smslib-${smslib.version}-sources.jar" />
